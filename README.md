@@ -67,7 +67,7 @@ A production-ready web application implementing advanced security features inclu
 ### 1. Clone the Repository
 
 ```bash
-cd /home/a-anuj/Projects/focys-student-submission-system
+git clone https://github.com/a-anuj/secure-assignment-submission-system.git
 ```
 
 ### 2. Backend Setup
