@@ -7,6 +7,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { RoleRoute } from './components/RoleRoute';
 import { Login } from './pages/Login';
 import { OTPVerification } from './pages/OTPVerification';
+import { TOTPVerify } from './pages/TOTPVerify';
+import { MFAEnroll } from './pages/MFAEnroll';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { FacultyDashboard } from './pages/FacultyDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
@@ -42,6 +44,8 @@ function AppRoutes() {
                 user ? <Navigate to={getRoleDashboard()} replace /> : <Login />
             } />
             <Route path="/otp-verify" element={<OTPVerification />} />
+            <Route path="/totp-verify" element={<TOTPVerify />} />
+            <Route path="/mfa-enroll" element={<MFAEnroll />} />
 
             {/* Protected routes */}
             <Route path="/" element={

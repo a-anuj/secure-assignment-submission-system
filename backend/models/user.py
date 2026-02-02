@@ -3,7 +3,7 @@ User model with role-based access control.
 Stores RSA keys for encryption and digital signatures.
 """
 import uuid
-from sqlalchemy import Column, String, Enum, DateTime, Text
+from sqlalchemy import Column, String, Enum, DateTime, Text, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import enum
@@ -25,6 +25,7 @@ class User(Base):
     - Password stored as bcrypt hash (never plaintext)
     - RSA public key for encryption (all users)
     - RSA private key for signatures (faculty only)
+    - TOTP secret for MFA (RFC 6238 compliant)
     """
     __tablename__ = "users"
     
@@ -39,6 +40,10 @@ class User(Base):
     # Encryption: RSA keys stored in PEM format
     public_key_pem = Column(Text, nullable=False)
     private_key_pem = Column(Text, nullable=True)  # Only for faculty (for signing)
+    
+    # TOTP MFA: RFC 6238 compliant Time-based One-Time Password
+    totp_secret = Column(String(32), nullable=True)  # Base32 encoded secret
+    mfa_enabled = Column(Boolean, nullable=False, default=False)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     

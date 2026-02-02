@@ -1,5 +1,5 @@
 /**
- * Login page with email/password authentication.
+ * Login page with email/password authentication and TOTP MFA support.
  */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +21,11 @@ export const Login = () => {
         try {
             const result = await login(email, password);
 
-            if (result.requires_otp) {
-                // Redirect to OTP verification page
+            if (result.requires_totp) {
+                // TOTP MFA enabled: Redirect to TOTP verification page
+                navigate('/totp-verify', { state: { email } });
+            } else if (result.requires_otp) {
+                // Email OTP required: Redirect to OTP verification page (for MFA setup)
                 navigate('/otp-verify', { state: { email } });
             } else {
                 // Shouldn't happen in this app, but handle it
@@ -90,14 +93,14 @@ export const Login = () => {
                             disabled={loading}
                             className="w-full btn btn-primary text-base py-3"
                         >
-                            {loading ? 'Logging in...' : 'Continue to OTP Verification'}
+                            {loading ? 'Logging in...' : 'Sign In'}
                         </button>
                     </form>
 
                     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-700 font-medium mb-2">📧 Multi-Factor Authentication</p>
+                        <p className="text-sm text-blue-700 font-medium mb-2">🔐 Multi-Factor Authentication</p>
                         <p className="text-xs text-blue-600">
-                            After entering your credentials, you'll receive a 6-digit OTP code. Check the backend console for your OTP.
+                            This system uses Time-based One-Time Passwords (TOTP) for enhanced security. After your first login, you'll set up an authenticator app (Google Authenticator, Authy, or Microsoft Authenticator).
                         </p>
                     </div>
 
