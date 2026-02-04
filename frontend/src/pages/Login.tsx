@@ -110,6 +110,16 @@ export const Login = () => {
                             This system uses Time-based One-Time Passwords (TOTP) for enhanced security. After your first login, you'll set up an authenticator app.
                         </p>
                     </div>
+
+                    <div className="mt-6 p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-xl text-center">
+                        <p className="text-sm font-bold text-slate-300 mb-3">📝 Demo Accounts:</p>
+                        <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                            Student: alice@student.com<br />
+                            Faculty: john.smith@faculty.com<br />
+                            Admin: admin@example.com<br />
+                            <span className="text-cyan-400">Password: Check README</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
