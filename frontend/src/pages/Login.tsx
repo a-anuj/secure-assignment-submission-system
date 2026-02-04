@@ -39,27 +39,34 @@ export const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+                <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse animation-delay-4000"></div>
+            </div>
+
+            <div className="max-w-md w-full relative z-10">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-5xl font-bold gradient-text mb-3">
                         🔒 SecureSubmit
                     </h1>
-                    <p className="text-gray-600">Secure Student Assignment Submission System</p>
+                    <p className="text-slate-400 text-lg">Secure Student Assignment Submission System</p>
                 </div>
 
                 <div className="card">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Login</h2>
+                    <h2 className="text-3xl font-bold gradient-text mb-6">Welcome Back</h2>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                            {error}
+                        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-sm font-medium">
+                            ⚠️ {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -74,7 +81,7 @@ export const Login = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
                                 Password
                             </label>
                             <input
@@ -91,26 +98,16 @@ export const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full btn btn-primary text-base py-3"
+                            className="w-full btn btn-primary text-base py-3 font-semibold"
                         >
-                            {loading ? 'Logging in...' : 'Sign In'}
+                            {loading ? '🔄 Logging in...' : 'Sign In'}
                         </button>
                     </form>
 
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-700 font-medium mb-2">🔐 Multi-Factor Authentication</p>
-                        <p className="text-xs text-blue-600">
-                            This system uses Time-based One-Time Passwords (TOTP) for enhanced security. After your first login, you'll set up an authenticator app (Google Authenticator, Authy, or Microsoft Authenticator).
-                        </p>
-                    </div>
-
-                    <div className="mt-6 text-center text-sm text-gray-600">
-                        <p>Demo Accounts:</p>
-                        <p className="text-xs mt-2">
-                            Student: alice@student.com<br />
-                            Faculty: john.smith@faculty.com<br />
-                            Admin: admin@example.com<br />
-                            Password: Check README
+                    <div className="mt-6 p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl">
+                        <p className="text-sm font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">🔐 Multi-Factor Authentication</p>
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                            This system uses Time-based One-Time Passwords (TOTP) for enhanced security. After your first login, you'll set up an authenticator app.
                         </p>
                     </div>
                 </div>

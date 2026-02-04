@@ -14,7 +14,7 @@ from models.submission import Submission
 from models.course import Course
 from schemas.assignment import AssignmentResponse
 from schemas.submission import GradeAssignment, SubmissionResponse
-from utils.acl import get_current_user, check_permission
+from utils.acl import get_current_user, check_permission, require_permission, require_role, require_faculty
 from utils.encryption import decrypt_file_hybrid
 from utils.signature import sign_hash
 import uuid
@@ -25,7 +25,7 @@ router = APIRouter(prefix="/faculty", tags=["Faculty"])
 
 @router.get("/assignments/assigned", response_model=List[AssignmentResponse])
 def get_assigned_submissions(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_faculty),
     db: Session = Depends(get_db)
 ):
     """
@@ -37,13 +37,6 @@ def get_assigned_submissions(
     - List of assignments from their assigned courses
     - Includes grading status
     """
-    # Check permission
-    if not check_permission(current_user.role, "assignment:read_others"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only faculty can view assigned submissions"
-        )
-    
     # Get courses assigned to this faculty
     courses = db.query(Course).filter(Course.faculty_id == current_user.id).all()
     course_ids = [course.id for course in courses]
@@ -79,7 +72,7 @@ def get_assigned_submissions(
 @router.get("/assignments/{assignment_id}/download")
 async def download_assignment(
     assignment_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_faculty),
     db: Session = Depends(get_db)
 ):
     """
@@ -96,12 +89,6 @@ async def download_assignment(
     Returns:
     - Decrypted file as download
     """
-    # Check permission
-    if not check_permission(current_user.role, "assignment:download"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only faculty can download assignments"
-        )
     
     # Parse assignment ID
     try:
@@ -186,7 +173,7 @@ async def download_assignment(
 def grade_assignment(
     assignment_id: str,
     grading: GradeAssignment,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_faculty),
     db: Session = Depends(get_db)
 ):
     """
@@ -209,12 +196,6 @@ def grade_assignment(
     Returns:
     - Submission record with signature
     """
-    # Check permission
-    if not check_permission(current_user.role, "assignment:grade"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only faculty can grade assignments"
-        )
     
     # Parse assignment ID
     try:

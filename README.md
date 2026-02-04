@@ -401,7 +401,15 @@ Password: student123
 - **JWT**: https://jwt.io/
 - **Cryptography**: https://cryptography.io/
 
-## 📄 License
+## � Documentation
+
+- [Encoding Techniques Rubric](ENCODING_TECHNIQUES_RUBRIC.md) - Comprehensive analysis of all encryption/encoding methods, security levels, risks, and attack vectors
+- [TOTP MFA Setup Guide](TOTP_MFA_SETUP_GUIDE.md) - Multi-factor authentication implementation
+- [TOTP MFA Documentation](TOTP_MFA_DOCUMENTATION.md) - Complete MFA feature documentation
+- [Dark Theme Updates](DARK_THEME_UPDATES.md) - UI/UX dark theme implementation
+- [ACL Implementation](ACL_IMPLEMENTATION.md) - Role-based access control system
+
+## �📄 License
 
 This project is for educational purposes as part of a security implementation assignment.
 

@@ -1,31 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  * {
+    font-family: 'Poppins', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100;
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
   }
 }
 
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+    @apply px-4 py-2 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl active:scale-95;
   }
 
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 active:scale-95;
+    @apply bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-400 hover:to-blue-500 border border-cyan-400/20;
   }
 
   .btn-secondary {
-    @apply bg-gray-200 text-gray-800 hover:bg-gray-300 active:scale-95;
+    @apply bg-gradient-to-r from-slate-700 to-slate-800 text-slate-100 hover:from-slate-600 hover:to-slate-700 border border-slate-600/40;
+  }
+
+  .btn-danger {
+    @apply bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-500 hover:to-red-600 border border-red-500/20;
+  }
+
+  .btn-success {
+    @apply bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-500 hover:to-teal-500 border border-emerald-500/20;
   }
 
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+    @apply w-full px-4 py-3 rounded-lg bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all placeholder-slate-500;
+  }
+
+  .input-field::placeholder {
+    @apply text-slate-500;
+  }
+
+  textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select {
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100 border-slate-600/50 !important;
+  }
+
+  textarea:focus, input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, select:focus {
+    @apply ring-2 ring-cyan-500/50 border-cyan-500 !important;
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-md p-6 border border-gray-100;
+    @apply bg-gradient-to-br from-slate-800/40 to-slate-900/40 rounded-2xl shadow-2xl p-6 border border-slate-700/30 backdrop-blur-sm;
+  }
+
+  .card-dark {
+    @apply bg-slate-900/60 rounded-2xl shadow-xl p-6 border border-slate-700/20 backdrop-blur-md;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .gradient-text-warm {
+    @apply bg-gradient-to-r from-amber-400 via-pink-500 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  .glass-effect {
+    @apply bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-md border border-slate-600/40 rounded-2xl;
+  }
+
+  .modal {
+    @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4;
+  }
+
+  .modal-content {
+    @apply bg-gradient-to-br from-slate-800 via-slate-800 to-slate-900 rounded-lg shadow-2xl max-w-md w-full p-6 border border-slate-700/50;
+  }
+
+  .table-row-hover {
+    @apply hover:bg-gradient-to-r hover:from-slate-700/30 hover:to-slate-800/30 transition-all duration-200;
   }
 }

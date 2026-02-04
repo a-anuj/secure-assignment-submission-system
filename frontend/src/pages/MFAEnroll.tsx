@@ -76,9 +76,14 @@ export const MFAEnroll = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-                <div className="card">
-                    <p className="text-center text-gray-600">Setting up your authenticator...</p>
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                </div>
+                <div className="card relative z-10">
+                    <p className="text-center text-slate-400">Setting up your authenticator...</p>
                 </div>
             </div>
         );
@@ -86,14 +91,19 @@ export const MFAEnroll = () => {
 
     if (error && !enrollment) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-                <div className="card">
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                </div>
+                <div className="card relative z-10">
+                    <div className="p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300">
                         {error}
                     </div>
                     <button
                         onClick={() => navigate('/login')}
-                        className="w-full mt-4 btn btn-primary"
+                        className="w-full mt-4 btn btn-secondary"
                     >
                         Back to Login
                     </button>
@@ -103,19 +113,24 @@ export const MFAEnroll = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+            </div>
+            <div className="max-w-md w-full relative z-10">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-4xl font-bold gradient-text mb-2">
                         🔒 SecureSubmit
                     </h1>
-                    <p className="text-gray-600">Set Up Two-Factor Authentication</p>
+                    <p className="text-slate-400">Set Up Two-Factor Authentication</p>
                 </div>
 
                 <div className="card">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Step 1: Scan QR Code</h2>
+                    <h2 className="text-2xl font-bold gradient-text mb-4">Step 1: Scan QR Code</h2>
                     
-                    <div className="bg-gray-50 p-4 rounded-lg mb-6 flex justify-center">
+                    <div className="bg-white p-4 rounded-lg mb-6 flex justify-center border border-slate-600/30">
                         {enrollment?.qr_code && (
                             <img
                                 src={enrollment.qr_code}
@@ -125,11 +140,11 @@ export const MFAEnroll = () => {
                         )}
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-slate-400 mb-4">
                         Scan this QR code with your authenticator app:
                     </p>
 
-                    <ul className="text-xs text-gray-600 space-y-2 mb-6 p-3 bg-blue-50 rounded">
+                    <ul className="text-xs text-slate-400 space-y-2 mb-6 p-3 bg-cyan-900/20 border border-cyan-500/20 rounded">
                         <li className="flex items-start">
                             <span className="mr-2">✓</span>
                             <span>Google Authenticator</span>
@@ -148,11 +163,11 @@ export const MFAEnroll = () => {
                         </li>
                     </ul>
 
-                    <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <p className="text-xs text-yellow-800 font-medium mb-2">💾 Backup Code</p>
-                        <p className="text-xs text-yellow-700 mb-2">If you lose access to your authenticator app, you can use this backup code:</p>
+                    <div className="mb-6 p-3 bg-orange-900/20 border border-orange-500/20 rounded-lg">
+                        <p className="text-xs text-orange-400 font-medium mb-2">💾 Backup Code</p>
+                        <p className="text-xs text-slate-400 mb-2">If you lose access to your authenticator app, you can use this backup code:</p>
                         <div 
-                            className="bg-white p-2 rounded font-mono text-xs text-center break-all cursor-pointer hover:bg-gray-100"
+                            className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-2 rounded font-mono text-xs text-center break-all cursor-pointer hover:bg-slate-800/60 border border-slate-600/50"
                             onClick={() => {
                                 if (enrollment?.secret) {
                                     navigator.clipboard.writeText(enrollment.secret);
@@ -164,19 +179,19 @@ export const MFAEnroll = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowSecret(!showSecret)}
-                                className="ml-2 text-primary-600 hover:text-primary-800 text-xs"
+                                className="ml-2 text-cyan-400 hover:text-cyan-300 text-xs"
                             >
                                 {showSecret ? 'Hide' : 'Show'}
                             </button>
                         </div>
                     </div>
 
-                    <hr className="my-6" />
+                    <hr className="my-6 border-slate-700/50" />
 
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Step 2: Verify Code</h3>
+                    <h3 className="text-lg font-bold gradient-text mb-4">Step 2: Verify Code</h3>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                        <div className="mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300 text-sm">
                             {error}
                             {attemptsRemaining < 5 && (
                                 <p className="mt-1 text-xs">
@@ -190,7 +205,7 @@ export const MFAEnroll = () => {
 
                     <form onSubmit={handleVerify} className="space-y-4">
                         <div>
-                            <label htmlFor="totp_code" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="totp_code" className="block text-sm font-medium text-slate-300 mb-2">
                                 Enter the 6-digit code from your authenticator app
                             </label>
                             <input
@@ -204,7 +219,7 @@ export const MFAEnroll = () => {
                                 placeholder="000000"
                                 autoFocus
                             />
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-slate-500 mt-2">
                                 {totp_code.length}/6 digits
                             </p>
                         </div>
@@ -212,15 +227,15 @@ export const MFAEnroll = () => {
                         <button
                             type="submit"
                             disabled={verifying || totp_code.length !== 6}
-                            className="w-full btn btn-primary text-base py-3"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-slate-600 disabled:cursor-not-allowed"
                         >
                             {verifying ? 'Verifying...' : 'Complete Setup'}
                         </button>
                     </form>
 
-                    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-sm text-green-800 font-medium mb-2">✓ Security Improved</p>
-                        <p className="text-xs text-green-700">
+                    <div className="mt-6 p-4 bg-emerald-900/20 border border-emerald-500/20 rounded-lg">
+                        <p className="text-sm text-emerald-400 font-medium mb-2">✓ Security Improved</p>
+                        <p className="text-xs text-slate-400">
                             Your account is now protected with TOTP-based two-factor authentication. Future logins will require both your password and authenticator code.
                         </p>
                     </div>

@@ -5,10 +5,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './lib/auth';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { RoleRoute } from './components/RoleRoute';
+import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { OTPVerification } from './pages/OTPVerification';
 import { TOTPVerify } from './pages/TOTPVerify';
 import { MFAEnroll } from './pages/MFAEnroll';
+import EncodingTechniques from './pages/EncodingTechniques';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { FacultyDashboard } from './pages/FacultyDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
@@ -39,6 +41,11 @@ function AppRoutes() {
 
     return (
         <Routes>
+            {/* Landing page */}
+            <Route path="/" element={
+                user ? <Navigate to={getRoleDashboard()} replace /> : <Landing />
+            } />
+
             {/* Public routes */}
             <Route path="/login" element={
                 user ? <Navigate to={getRoleDashboard()} replace /> : <Login />
@@ -46,9 +53,10 @@ function AppRoutes() {
             <Route path="/otp-verify" element={<OTPVerification />} />
             <Route path="/totp-verify" element={<TOTPVerify />} />
             <Route path="/mfa-enroll" element={<MFAEnroll />} />
+            <Route path="/encoding-techniques" element={<EncodingTechniques />} />
 
-            {/* Protected routes */}
-            <Route path="/" element={
+            {/* Protected routes - Dashboard redirect */}
+            <Route path="/dashboard" element={
                 <ProtectedRoute>
                     <Navigate to={getRoleDashboard()} replace />
                 </ProtectedRoute>
@@ -123,10 +131,10 @@ function AppRoutes() {
 
             {/* Fallback */}
             <Route path="/unauthorized" element={
-                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
                     <div className="card max-w-md">
-                        <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
-                        <p className="text-gray-600">You don't have permission to access this page.</p>
+                        <h1 className="text-2xl font-bold text-red-400 mb-4">Access Denied</h1>
+                        <p className="text-slate-400">You don't have permission to access this page.</p>
                     </div>
                 </div>
             } />

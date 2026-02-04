@@ -7,7 +7,7 @@ from typing import List, Callable
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
-from models.user import UserRole
+from models.user import UserRole, User
 from utils.auth import verify_token
 from database import get_db
 
@@ -115,7 +115,7 @@ def require_role(allowed_roles: List[UserRole]):
     """
     def decorator(func: Callable):
         @wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def async_wrapper(*args, **kwargs):
             # Get current_user from kwargs
             current_user = kwargs.get("current_user")
             if current_user is None:
@@ -130,8 +130,37 @@ def require_role(allowed_roles: List[UserRole]):
                     detail=f"Access denied. Required roles: {[r.value for r in allowed_roles]}"
                 )
             
-            return await func(*args, **kwargs)
-        return wrapper
+            # Check if function is async
+            import asyncio
+            if asyncio.iscoroutinefunction(func):
+                return await func(*args, **kwargs)
+            else:
+                return func(*args, **kwargs)
+        
+        @wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            # Get current_user from kwargs
+            current_user = kwargs.get("current_user")
+            if current_user is None:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Authentication required"
+                )
+            
+            if current_user.role not in allowed_roles:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Access denied. Required roles: {[r.value for r in allowed_roles]}"
+                )
+            
+            return func(*args, **kwargs)
+        
+        # Return appropriate wrapper based on function type
+        import asyncio
+        if asyncio.iscoroutinefunction(func):
+            return async_wrapper
+        else:
+            return sync_wrapper
     return decorator
 
 
@@ -153,7 +182,7 @@ def require_permission(permission: str):
     """
     def decorator(func: Callable):
         @wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def async_wrapper(*args, **kwargs):
             current_user = kwargs.get("current_user")
             if current_user is None:
                 raise HTTPException(
@@ -167,6 +196,116 @@ def require_permission(permission: str):
                     detail=f"Access denied. Required permission: {permission}"
                 )
             
-            return await func(*args, **kwargs)
-        return wrapper
+            # Check if function is async
+            import asyncio
+            if asyncio.iscoroutinefunction(func):
+                return await func(*args, **kwargs)
+            else:
+                return func(*args, **kwargs)
+        
+        @wraps(func)
+        def sync_wrapper(*args, **kwargs):
+            current_user = kwargs.get("current_user")
+            if current_user is None:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Authentication required"
+                )
+            
+            if not check_permission(current_user.role, permission):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Access denied. Required permission: {permission}"
+                )
+            
+            return func(*args, **kwargs)
+        
+        # Return appropriate wrapper based on function type
+        import asyncio
+        if asyncio.iscoroutinefunction(func):
+            return async_wrapper
+        else:
+            return sync_wrapper
     return decorator
+
+
+# ===== FastAPI-compatible role dependencies =====
+# These are the CORRECT way to implement role-based access control in FastAPI.
+# Use these instead of the @require_role decorator.
+
+def require_admin(current_user: User = Depends(get_current_user)):
+    """
+    Dependency that requires the user to have admin role.
+    
+    Usage:
+        @router.get("/admin-only")
+        def admin_endpoint(current_user: User = Depends(require_admin), db: Session = Depends(get_db)):
+            ...
+    
+    Args:
+        current_user: Current authenticated user from get_current_user dependency
+        
+    Returns:
+        User object if role check passes
+        
+    Raises:
+        HTTPException 403: If user is not an admin
+    """
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied. Required role: admin"
+        )
+    return current_user
+
+
+def require_faculty(current_user: User = Depends(get_current_user)):
+    """
+    Dependency that requires the user to have faculty role.
+    
+    Usage:
+        @router.get("/faculty-only")
+        def faculty_endpoint(current_user: User = Depends(require_faculty), db: Session = Depends(get_db)):
+            ...
+    
+    Args:
+        current_user: Current authenticated user from get_current_user dependency
+        
+    Returns:
+        User object if role check passes
+        
+    Raises:
+        HTTPException 403: If user is not a faculty member
+    """
+    if current_user.role != UserRole.FACULTY:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied. Required role: faculty"
+        )
+    return current_user
+
+
+def require_student(current_user: User = Depends(get_current_user)):
+    """
+    Dependency that requires the user to have student role.
+    
+    Usage:
+        @router.get("/student-only")
+        def student_endpoint(current_user: User = Depends(require_student), db: Session = Depends(get_db)):
+            ...
+    
+    Args:
+        current_user: Current authenticated user from get_current_user dependency
+        
+    Returns:
+        User object if role check passes
+        
+    Raises:
+        HTTPException 403: If user is not a student
+    """
+    if current_user.role != UserRole.STUDENT:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied. Required role: student"
+        )
+    return current_user

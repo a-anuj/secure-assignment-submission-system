@@ -58,27 +58,33 @@ export const TOTPVerify = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+            </div>
+
+            <div className="max-w-md w-full relative z-10">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-5xl font-bold gradient-text mb-3">
                         🔐 SecureSubmit
                     </h1>
-                    <p className="text-gray-600">TOTP Authentication</p>
+                    <p className="text-slate-400 text-lg">TOTP Authentication</p>
                 </div>
 
                 <div className="card">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Enter 6-Digit Code</h2>
-                    <p className="text-gray-600 text-sm mb-6">
+                    <h2 className="text-2xl font-bold gradient-text mb-2">Enter 6-Digit Code</h2>
+                    <p className="text-slate-400 text-sm mb-6 font-medium">
                         Enter the code from your authenticator app (Google Authenticator, Authy, or Microsoft Authenticator)
                     </p>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                            {error}
+                        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-sm font-medium">
+                            ⚠️ {error}
                             {attemptsRemaining < 5 && (
-                                <p className="mt-1 text-xs">
-                                    {attemptsRemaining === 1 
+                                <p className="mt-2 text-xs text-red-400/80">
+                                    ⏰ {attemptsRemaining === 1 
                                         ? 'One attempt remaining' 
                                         : `${attemptsRemaining} attempts remaining`}
                                 </p>
@@ -86,9 +92,9 @@ export const TOTPVerify = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="totp_code" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="totp_code" className="block text-sm font-semibold text-slate-300 mb-2">
                                 Authenticator Code
                             </label>
                             <input

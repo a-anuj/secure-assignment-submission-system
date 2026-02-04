@@ -21,6 +21,7 @@ interface AuthContextType {
     logout: () => void;
     isAuthenticated: boolean;
     hasRole: (role: UserRole) => boolean;
+    confirmLogout: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +29,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [logoutResolve, setLogoutResolve] = useState<((value: boolean) => void) | null>(null);
 
     // Check if user is already logged in
     useEffect(() => {
@@ -109,6 +112,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         window.location.href = '/login';
     };
 
+    const confirmLogout = async (): Promise<boolean> => {
+        return new Promise((resolve) => {
+            setLogoutResolve(() => resolve);
+            setShowLogoutConfirm(true);
+        });
+    };
+
+    const handleConfirmLogout = () => {
+        setShowLogoutConfirm(false);
+        if (logoutResolve) logoutResolve(true);
+        logout();
+    };
+
+    const handleCancelLogout = () => {
+        setShowLogoutConfirm(false);
+        if (logoutResolve) logoutResolve(false);
+    };
+
     const isAuthenticated = !!user;
 
     const hasRole = (role: UserRole) => {
@@ -117,9 +138,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <AuthContext.Provider
-            value={{ user, loading, login, verifyOTP, enrollMFA, verifyTOTP, logout, isAuthenticated, hasRole }}
+            value={{ user, loading, login, verifyOTP, enrollMFA, verifyTOTP, logout, isAuthenticated, hasRole, confirmLogout }}
         >
             {children}
+            
+            {/* Logout Confirmation Modal */}
+            {showLogoutConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[9999] p-4">
+                    <div className="bg-gradient-to-br from-slate-800 via-slate-800 to-slate-900 rounded-lg shadow-2xl max-w-sm w-full p-6 border border-slate-700/50">
+                        <h2 className="text-2xl font-bold text-slate-100 mb-4">Confirm Logout</h2>
+                        <p className="text-slate-300 mb-6">Are you sure you want to logout? You'll need to login again to access your account.</p>
+                        
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleConfirmLogout}
+                                className="flex-1 bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-700 transition"
+                            >
+                                Logout
+                            </button>
+                            <button
+                                onClick={handleCancelLogout}
+                                className="flex-1 px-6 py-3 border border-slate-600/50 rounded-lg font-semibold text-slate-300 hover:bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 transition"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AuthContext.Provider>
     );
 };

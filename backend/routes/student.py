@@ -11,7 +11,8 @@ from models.assignment import Assignment
 from models.submission import Submission
 from models.course import Course
 from schemas.assignment import AssignmentResponse, MySubmissionsResponse
-from utils.acl import get_current_user, check_permission
+from schemas.course import CourseResponse
+from utils.acl import get_current_user, check_permission, require_permission, require_role, require_student
 from utils.encryption import encrypt_file_hybrid
 from utils.signature import generate_file_hash
 import uuid
@@ -19,11 +20,44 @@ import uuid
 router = APIRouter(prefix="/student", tags=["Student"])
 
 
+@router.get("/courses", response_model=List[CourseResponse])
+def list_available_courses(
+    current_user: User = Depends(require_student),
+    db: Session = Depends(get_db)
+):
+    """
+    Get all available courses for students.
+    
+    ACL: Students can view all courses to select when uploading assignments
+    
+    Returns:
+    - List of all courses with faculty assignments
+    """
+    courses = db.query(Course).all()
+    
+    result = []
+    for course in courses:
+        faculty = None
+        if course.faculty_id:
+            faculty = db.query(User).filter(User.id == course.faculty_id).first()
+        
+        result.append(CourseResponse(
+            id=str(course.id),
+            name=course.name,
+            code=course.code,
+            faculty_id=str(course.faculty_id) if course.faculty_id else None,
+            faculty_name=faculty.name if faculty else None
+        ))
+    
+    return result
+
+
+
 @router.post("/assignments/upload", response_model=AssignmentResponse, status_code=status.HTTP_201_CREATED)
 async def upload_assignment(
     course_id: str = Form(...),
     file: UploadFile = File(...),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_student),
     db: Session = Depends(get_db)
 ):
     """
@@ -43,12 +77,6 @@ async def upload_assignment(
     - File encrypted before storage
     - Faculty can decrypt with their private key
     """
-    # Check permission
-    if not check_permission(current_user.role, "assignment:create"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only students can upload assignments"
-        )
     
     # Validate course exists
     try:
@@ -153,7 +181,7 @@ async def upload_assignment(
 
 @router.get("/assignments/my-submissions", response_model=List[MySubmissionsResponse])
 def get_my_submissions(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_student),
     db: Session = Depends(get_db)
 ):
     """
@@ -165,13 +193,6 @@ def get_my_submissions(
     - List of assignments with grading status
     - If graded, includes marks, feedback, and signature
     """
-    # Check permission
-    if not check_permission(current_user.role, "assignment:read_own"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied"
-        )
-    
     # Get all assignments by this student
     assignments = db.query(Assignment).filter(
         Assignment.student_id == current_user.id

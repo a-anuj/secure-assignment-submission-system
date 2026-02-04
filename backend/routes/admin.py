@@ -10,7 +10,7 @@ from models.user import User, UserRole
 from models.course import Course
 from schemas.user import UserCreate, UserResponse, UserUpdate
 from schemas.course import CourseCreate, CourseResponse, AssignFaculty
-from utils.acl import get_current_user, check_permission
+from utils.acl import get_current_user, check_permission, require_permission, require_role, require_admin
 from utils.auth import hash_password
 from utils.encryption import generate_rsa_keypair
 import uuid
@@ -20,7 +20,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 @router.get("/users", response_model=List[UserResponse])
 def list_users(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -28,13 +28,6 @@ def list_users(
     
     ACL: Only admins can view all users
     """
-    # Check permission
-    if not check_permission(current_user.role, "user:read"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can view all users"
-        )
-    
     users = db.query(User).all()
     return users
 
@@ -42,7 +35,7 @@ def list_users(
 @router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def create_user(
     user_data: UserCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -52,13 +45,6 @@ def create_user(
     
     This allows admins to create faculty accounts directly.
     """
-    # Check permission
-    if not check_permission(current_user.role, "user:create"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can create users"
-        )
-    
     # Check if user already exists
     existing_user = db.query(User).filter(User.email == user_data.email).first()
     if existing_user:
@@ -95,7 +81,7 @@ def create_user(
 def update_user_role(
     user_id: str,
     update_data: UserUpdate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -103,13 +89,6 @@ def update_user_role(
     
     ACL: Only admins can update users
     """
-    # Check permission
-    if not check_permission(current_user.role, "user:update"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can update users"
-        )
-    
     # Parse user ID
     try:
         user_uuid = uuid.UUID(user_id)
@@ -151,7 +130,7 @@ def update_user_role(
 
 @router.get("/courses", response_model=List[CourseResponse])
 def list_courses(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -159,13 +138,6 @@ def list_courses(
     
     ACL: Only admins can view all courses
     """
-    # Check permission
-    if not check_permission(current_user.role, "course:read"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can view all courses"
-        )
-    
     courses = db.query(Course).all()
     
     result = []
@@ -188,7 +160,7 @@ def list_courses(
 @router.post("/courses", response_model=CourseResponse, status_code=status.HTTP_201_CREATED)
 def create_course(
     course_data: CourseCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -196,13 +168,6 @@ def create_course(
     
     ACL: Only admins can create courses
     """
-    # Check permission
-    if not check_permission(current_user.role, "course:create"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can create courses"
-        )
-    
     # Check if course code already exists
     existing_course = db.query(Course).filter(Course.code == course_data.code).first()
     if existing_course:
@@ -233,7 +198,7 @@ def create_course(
 @router.post("/courses/assign-faculty")
 def assign_faculty_to_course(
     assignment: AssignFaculty,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_admin),
     db: Session = Depends(get_db)
 ):
     """
@@ -241,13 +206,6 @@ def assign_faculty_to_course(
     
     ACL: Only admins can assign faculty
     """
-    # Check permission
-    if not check_permission(current_user.role, "course:assign_faculty"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins can assign faculty"
-        )
-    
     # Parse IDs
     try:
         course_uuid = uuid.UUID(assignment.course_id)

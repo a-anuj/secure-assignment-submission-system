@@ -30,60 +30,62 @@ export const FacultyDashboard = () => {
     const pendingCount = assignments.filter(a => !a.is_graded).length;
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
             <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Faculty Dashboard</h1>
-                    <p className="text-gray-600 mt-1">Review and grade student submissions</p>
+                    <h1 className="text-4xl font-bold gradient-text-warm">Faculty Dashboard</h1>
+                    <p className="text-slate-400 mt-2 font-medium">Review and grade student submissions</p>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="card bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                    <div className="card bg-gradient-to-br from-purple-900/30 to-indigo-900/30 border-purple-500/30 hover:border-purple-500/60 transition-all hover:shadow-xl hover:shadow-purple-500/20">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-purple-600">Total Submissions</p>
-                                <p className="text-3xl font-bold text-purple-900 mt-2">{assignments.length}</p>
+                                <p className="text-xs font-bold text-purple-400 uppercase tracking-wider">Total Submissions</p>
+                                <p className="text-4xl font-bold text-purple-300 mt-3">{assignments.length}</p>
                             </div>
-                            <div className="text-4xl">📚</div>
+                            <div className="text-5xl">📚</div>
                         </div>
                     </div>
 
-                    <div className="card bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+                    <div className="card bg-gradient-to-br from-red-900/30 to-pink-900/30 border-red-500/30 hover:border-red-500/60 transition-all hover:shadow-xl hover:shadow-red-500/20">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-red-600">Pending Review</p>
-                                <p className="text-3xl font-bold text-red-900 mt-2">{pendingCount}</p>
+                                <p className="text-xs font-bold text-red-400 uppercase tracking-wider">Pending Review</p>
+                                <p className="text-4xl font-bold text-red-300 mt-3">{pendingCount}</p>
                             </div>
-                            <div className="text-4xl">⏰</div>
+                            <div className="text-5xl">⏰</div>
                         </div>
                     </div>
 
-                    <div className="card bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                    <div className="card bg-gradient-to-br from-emerald-900/30 to-teal-900/30 border-emerald-500/30 hover:border-emerald-500/60 transition-all hover:shadow-xl hover:shadow-emerald-500/20">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-green-600">Graded</p>
-                                <p className="text-3xl font-bold text-green-900 mt-2">{gradedCount}</p>
+                                <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Graded</p>
+                                <p className="text-4xl font-bold text-emerald-300 mt-3">{gradedCount}</p>
                             </div>
-                            <div className="text-4xl">✅</div>
+                            <div className="text-5xl">✅</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Quick Actions */}
                 <div className="mb-8">
-                    <Link to="/faculty/submissions" className="card hover:shadow-lg transition-all group cursor-pointer inline-block">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0">
-                                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
-                                    <span className="text-2xl">📝</span>
+                    <Link to="/faculty/submissions" className="group cursor-pointer inline-block">
+                        <div className="card hover:border-cyan-400/60 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20">
+                            <div className="flex items-center space-x-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-14 h-14 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center group-hover:from-cyan-500/40 group-hover:to-blue-500/40 transition-all">
+                                        <span className="text-3xl">📝</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="ml-4">
-                                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600">Review Submissions</h3>
-                                <p className="text-sm text-gray-600">Download, review, and grade student assignments</p>
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-100 group-hover:gradient-text transition-all">Review Submissions</h3>
+                                    <p className="text-sm text-slate-400">Download, review, and grade student assignments</p>
+                                </div>
                             </div>
                         </div>
                     </Link>
@@ -91,36 +93,39 @@ export const FacultyDashboard = () => {
 
                 {/* Recent Submissions */}
                 <div className="card">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Submissions</h2>
+                    <h2 className="text-2xl font-bold gradient-text mb-6">Recent Submissions</h2>
 
                     {loading ? (
-                        <div className="text-center py-8">
-                            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+                        <div className="text-center py-12">
+                            <div className="inline-block animate-spin rounded-full h-10 w-10 border-2 border-purple-500 border-t-transparent"></div>
+                            <p className="text-slate-400 mt-4 font-medium">Loading submissions...</p>
                         </div>
                     ) : assignments.length === 0 ? (
-                        <div className="text-center py-8">
-                            <p className="text-gray-600">No submissions yet.</p>
+                        <div className="text-center py-12 px-6 bg-gradient-to-r from-slate-800/30 to-slate-900/30 rounded-xl border border-slate-700/30">
+                            <p className="text-slate-400 text-lg font-medium">No submissions yet.</p>
                         </div>
                     ) : (
                         <div className="space-y-3">
                             {assignments.slice(0, 5).map((assignment) => (
-                                <div key={assignment.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <div className="flex-1">
-                                        <p className="font-medium text-gray-900">{assignment.filename}</p>
-                                        <p className="text-sm text-gray-600">
-                                            Uploaded: {new Date(assignment.upload_timestamp).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <div className="ml-4">
-                                        {assignment.is_graded ? (
-                                            <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                                                Graded
-                                            </span>
-                                        ) : (
-                                            <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-700 text-sm font-medium rounded-full">
-                                                Pending
-                                            </span>
-                                        )}
+                                <div key={assignment.id} className="table-row-hover p-4 bg-slate-800/20 rounded-lg border border-slate-700/30 hover:border-slate-600/50 transition-all">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex-1">
+                                            <p className="font-semibold text-slate-100">{assignment.filename}</p>
+                                            <p className="text-sm text-slate-400">
+                                                📅 {new Date(assignment.upload_timestamp).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <div className="ml-4">
+                                            {assignment.is_graded ? (
+                                                <span className="inline-block px-4 py-2 bg-gradient-to-r from-emerald-600/30 to-emerald-500/30 text-emerald-300 text-xs font-bold rounded-full border border-emerald-500/30">
+                                                    ✅ Graded
+                                                </span>
+                                            ) : (
+                                                <span className="inline-block px-4 py-2 bg-gradient-to-r from-orange-600/30 to-orange-500/30 text-orange-300 text-xs font-bold rounded-full border border-orange-500/30">
+                                                    ⏳ Pending
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             ))}

@@ -38,36 +38,42 @@ export const OTPVerification = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
+            </div>
+
+            <div className="max-w-md w-full relative z-10">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-5xl font-bold gradient-text mb-3">
                         🔒 SecureSubmit
                     </h1>
-                    <p className="text-gray-600">Email Verification (MFA Setup)</p>
+                    <p className="text-slate-400 text-lg">Email Verification (MFA Setup)</p>
                 </div>
 
                 <div className="card">
                     <div className="text-center mb-6">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-4">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full mb-4 border border-cyan-500/30">
                             <span className="text-3xl">📧</span>
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Verify Email</h2>
-                        <p className="text-sm text-gray-600">
+                        <h2 className="text-2xl font-bold gradient-text mb-2">Verify Email</h2>
+                        <p className="text-sm text-slate-400">
                             Step 1 of 2: Verify your email with the code we sent to<br />
-                            <span className="font-medium text-gray-900">{email}</span>
+                            <span className="font-semibold text-cyan-300">{email}</span>
                         </p>
                     </div>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                            {error}
+                        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-300 text-sm font-medium">
+                            ⚠️ {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="otp" className="block text-sm font-semibold text-slate-300 mb-2">
                                 OTP Code
                             </label>
                             <input
@@ -76,7 +82,7 @@ export const OTPVerification = () => {
                                 required
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                className="input-field text-center text-2xl tracking-widest"
+                                className="input-field text-center text-3xl tracking-widest font-bold"
                                 placeholder="000000"
                                 maxLength={6}
                                 pattern="\d{6}"
@@ -87,15 +93,15 @@ export const OTPVerification = () => {
                         <button
                             type="submit"
                             disabled={loading || otp.length !== 6}
-                            className="w-full btn btn-primary text-base py-3"
+                            className="w-full btn btn-primary text-base py-3 font-semibold"
                         >
-                            {loading ? 'Verifying...' : 'Next: Set Up Authenticator'}
+                            {loading ? '🔄 Verifying...' : '✓ Next: Set Up Authenticator'}
                         </button>
                     </form>
 
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-700 font-medium mb-1">📧 Email Verification</p>
-                        <p className="text-xs text-blue-600">
+                    <div className="mt-6 p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl">
+                        <p className="text-sm font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">📧 Email Verification</p>
+                        <p className="text-xs text-slate-400 leading-relaxed">
                             After verifying your email, you'll set up TOTP with your authenticator app (Google Authenticator, Authy, Microsoft Authenticator, etc.)
                         </p>
                     </div>
